@@ -1,4 +1,4 @@
-class DadosProcessor:
+class DataProcessor:
     def __init__(self, dados):
         self.dados = dados
 

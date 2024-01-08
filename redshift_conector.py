@@ -7,7 +7,7 @@ class RedshiftConnector:
         self.database = database
         self.user = user
         self.password = password
-
+        
     def executar_query(self, query):
         try:
             conexao = psycopg2.connect(

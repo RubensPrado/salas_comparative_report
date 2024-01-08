@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from data_proceessor import RedshiftConnector
 
 class SalesReport:
     def __init__(self):
@@ -7,6 +8,13 @@ class SalesReport:
         self.data_formatada = self.data_anterior.strftime("%d/%m")
         self.link = "https://docs.google.com/spreadsheets/d/1D1zaCjjf9XfdO321x3JDAFT-PoL51mquMg8PW_R5xt8/edit#gid=0"
 
+        self.redshift_connector = RedshiftConnector(
+            host='seu_host_redshift',
+            port='sua_porta_redshift',
+            database='seu_banco_de_dados',
+            user='seu_usuario_redshift',
+            password='sua_senha_redshift'
+        )
 
     def gerar_mensagem_html(self): 
         mensagem_html = f"""
@@ -18,6 +26,9 @@ class SalesReport:
             <p><strong>Segue Relatório Comparativo de Vendas</strong> atualizado com dados até <strong>{self.data_formatada}</strong>.</p>
             <p>Ele pode ser acessado através do seguinte <strong><a href={self.link} target="_blank">link</a></strong>.</p>
 
+              <h2>Dados do Redshift</h2>
+              {self.dados_processados}
+            
             <h2>Destaques do Comparativo</h2>
             <p>Abaixo seguem os principais destaques do comparativo com o mês de Dezembro (para isso utilizamos como período de comparação os dias <strong>04/12 ao 07/12</strong> para o mês de Dezembro e os dias <strong>01/01 ao 04/01</strong> para o mês de Janeiro):</p>
 

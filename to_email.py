@@ -14,6 +14,7 @@ class ToEmail:
         corpo_email = MIMEMultipart()
         corpo_email['From'] = self.config.remetente_email 
         corpo_email['To'] = ", ".join(self.config.destinatario_email)
+        corpo_email['Cc'] = ", ".join(self.config.destinatario_email_cc)
         corpo_email['Subject'] = self.config.assunto
         corpo_email.attach(MIMEText(self.relatorio.gerar_mensagem_html(), 'html'))
 

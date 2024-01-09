@@ -24,6 +24,8 @@ class SalesReport:
         dados_redshift = self.obter_dados_redshift()
 
         if dados_redshift:
+            dados_redshift = dados_redshift[:2]
+
             # Construa a tabela HTML com base nos dados da consulta
             tabela_html = "<table border='1'><tr><th>cd_periodo_dia</th><th>ds_neogrupo</th><th>ds_categoria_master</th><th>ds_categoria</th><th>ds_sub_categoria</th><th>ds_classe_terapeutica_raia</th><th>vendas</th></tr>"
 
@@ -41,8 +43,12 @@ class SalesReport:
             <p><strong>Bom dia, tudo bem?</strong></p>
 
             <h1>Relatório Comparativo de Vendas</h1>
+            
             <p><strong>Segue Relatório Comparativo de Vendas</strong> atualizado com dados até <strong>{self.data_formatada}</strong>.</p>
             <p>Ele pode ser acessado através do seguinte <strong><a href={self.link} target="_blank">link</a></strong>.</p>
+
+            <h2>Dados do Redshift (Apenas as duas primeiras linhas)</h2>
+            {tabela_html}
 
             <h2>Destaques do Comparativo</h2>
             <p>Abaixo seguem os principais destaques do comparativo com o mês de Dezembro (para isso utilizamos como período de comparação os dias <strong>04/12 ao 07/12</strong> para o mês de Dezembro e os dias <strong>01/01 ao 04/01</strong> para o mês de Janeiro):</p>

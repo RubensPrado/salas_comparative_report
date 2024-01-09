@@ -47,7 +47,7 @@ class RedshiftConnector:
             print("Conectado ao Redshift")
         except Exception as e:
             print(f"Erro: Não foi possível conectar ao Redshift - {e}")
-            # raise
+            raise
 
     def disconnect(self):
         if self.connection:

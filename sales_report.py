@@ -1,14 +1,39 @@
 from datetime import datetime, timedelta
+from redshift_conector import RedshiftConnector
 
 class SalesReport:
-    def __init__(self):
+    def __init__(self, redshift_connector=None):
         self.data_atual = datetime.now()
         self.data_anterior = self.data_atual - timedelta(days=1)
         self.data_formatada = self.data_anterior.strftime("%d/%m")
         self.link = "https://docs.google.com/spreadsheets/d/1D1zaCjjf9XfdO321x3JDAFT-PoL51mquMg8PW_R5xt8/edit#gid=0"
+    
+    def obter_dados_redshift(self):
+        redshift_connector = RedshiftConnector()
+        redshift_connector.connect()
+        
+        try:
+            dados = redshift_connector.executar_query()
+            return dados
+        finally:
+            redshift_connector.disconnect()
 
 
-    def gerar_mensagem_html(self): 
+    def gerar_mensagem_html(self):
+
+        dados_redshift = self.obter_dados_redshift()
+
+        if dados_redshift:
+            # Construa a tabela HTML com base nos dados da consulta
+            tabela_html = "<table border='1'><tr><th>cd_periodo_dia</th><th>ds_neogrupo</th><th>ds_categoria_master</th><th>ds_categoria</th><th>ds_sub_categoria</th><th>ds_classe_terapeutica_raia</th><th>vendas</th></tr>"
+
+            for linha in dados_redshift:
+                tabela_html += "<tr>"
+                for coluna in linha:
+                    tabela_html += f"<td>{coluna}</td>"
+                tabela_html += "</tr>"
+
+            tabela_html += "</table>" 
 
         mensagem_html = f"""
         <body>

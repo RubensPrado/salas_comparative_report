@@ -24,9 +24,8 @@ class SalesReport:
         dados_redshift = self.obter_dados_redshift()
 
         if dados_redshift:
-            dados_redshift = dados_redshift[:2]
+            dadpipios_redshift = dados_redshift[:2]
 
-            # Construa a tabela HTML com base nos dados da consulta
             tabela_html = "<table border='1'><tr><th>cd_periodo_dia</th><th>ds_neogrupo</th><th>ds_categoria_master</th><th>ds_categoria</th><th>ds_sub_categoria</th><th>ds_classe_terapeutica_raia</th><th>vendas</th></tr>"
 
             for linha in dados_redshift:

@@ -6,6 +6,11 @@ class RedshiftConnector:
     def __init__(self):
         load_dotenv()
 
+        # self.host = 'bi-cloud.dados.rd.com.br'
+        # self.port = '540'
+        # self.database = 'poc-rd'
+        # self.user = 'rudpsilva'
+        # self.password = 'itLwluGcZdH1'
         self.host = os.getenv("REDSHIFT_HOST")
         self.port = os.getenv("REDSHIFT_PORT")
         self.database = os.getenv("REDSHIFT_DATABASE")
@@ -13,24 +18,42 @@ class RedshiftConnector:
         self.password = os.getenv("REDSHIFT_PASSWORD")
         self.connection = None
         self.cursor = None
-        self.query_sales_analitics = """
-            SELECT 
-                venda.cd_periodo_dia,
-                dp.ds_neogrupo,
-                dp.ds_categoria_master,
-                dp.ds_categoria,
-                dp.ds_sub_categoria,
-                dp.ds_classe_terapeutica_raia,
-                SUM(venda.vl_rbv_apos_dev) AS vendas
-            FROM 
-                rd_corp.fat_venda_produto_dia venda
-                LEFT JOIN rd_corp.dim_produto dp ON (dp.cd_produto = venda.cd_produto AND dp.fl_ultima_versao = 1)
-            WHERE 
-                venda.cd_cliente NOT IN ('-1', '-2')
-                AND venda.cd_periodo_mes >= 202201
-            GROUP BY 
-                venda.cd_periodo_dia, dp.ds_neogrupo, dp.ds_categoria_master, dp.ds_categoria, dp.ds_sub_categoria, dp.ds_classe_terapeutica_raia
+        self.query_sales_analitics ="""
+        select 
+            venda.cd_periodo_dia 
+,dp.ds_neogrupo 
+,dp.ds_categoria_master 
+,dp.ds_categoria 
+--,dp.ds_produto 
+,dp.ds_sub_categoria 
+,dp.ds_classe_terapeutica_raia  
+,sum(venda.vl_rbv_apos_dev) as vendas
+from rd_corp.fat_venda_produto_dia venda		
+left join rd_corp.dim_produto dp on (dp.cd_produto = venda.cd_produto and dp.fl_ultima_versao = 1)
+where venda.cd_cliente not in ('-1','-2')
+and venda.cd_periodo_mes >= 202201
+--and venda.cd_periodo_dia = 20230705
+group by venda.cd_periodo_dia, dp.ds_neogrupo, dp.ds_categoria_master, dp.ds_categoria ,dp.ds_sub_categoria, dp.ds_classe_terapeutica_raia
         """
+        # """
+        #     SELECT 
+        #         venda.cd_periodo_dia,
+        #         dp.ds_neogrupo,
+        #         dp.ds_categoria_master,
+        #         dp.ds_categoria,
+        #         dp.ds_sub_categoria,
+        #         dp.ds_classe_terapeutica_raia,
+        #         SUM(venda.vl_rbv_apos_dev) AS vendas
+        #     FROM 
+        #         rd_corp.fat_venda_produto_dia venda
+        #         LEFT JOIN rd_corp.dim_produto dp ON (dp.cd_produto = venda.cd_produto AND dp.fl_ultima_versao = 1)
+        #     WHERE 
+        #         venda.cd_cliente NOT IN ('-1', '-2')
+        #         AND venda.cd_periodo_mes >= DATE_FORMAT(CURDATE() - INTERVAL 2 MONTH, '%Y%m')
+        #         AND venda.cd_periodo_mes <= DATE_FORMAT(CURDATE(), '%Y%m')
+        #     GROUP BY 
+        #         venda.cd_periodo_dia, dp.ds_neogrupo, dp.ds_categoria_master, dp.ds_categoria, dp.ds_sub_categoria, dp.ds_classe_terapeutica_raia;
+        #     """
         
     def connect(self):
         try:

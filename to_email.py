@@ -8,6 +8,8 @@ class ToEmail:
         self.relatorio = relatorio
 
     def enviar_email(self):
+        servidor = None
+
         servidor_smtp = "smtp.gmail.com"
         porta = 587
 
@@ -19,6 +21,7 @@ class ToEmail:
         corpo_email.attach(MIMEText(self.relatorio.gerar_mensagem_html(), 'html'))
 
         try:
+            print('preparando email')
             servidor = smtplib.SMTP(servidor_smtp, porta)
             servidor.starttls()
             servidor.login(self.config.remetente_email, self.config.senha)
@@ -30,4 +33,5 @@ class ToEmail:
             print(f"Erro ao enviar o e-mail: {e}")
 
         finally:
-            servidor.quit()
+            if servidor is not None:
+                servidor.quit()

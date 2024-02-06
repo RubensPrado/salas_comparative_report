@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from comp_neogrup import RedshiftConnector
+from redshift_conector import RedshiftConnector
 
 class SalesReport:
     def __init__(self, redshift_connector=None):
